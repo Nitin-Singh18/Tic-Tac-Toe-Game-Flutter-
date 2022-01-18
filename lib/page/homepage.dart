@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_collection_literals
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_collection_literals, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   var player1;
   var player2;
   var acitvePlayer;
+  var t = "X";
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
     player1 = [];
     player2 = [];
     acitvePlayer = 1;
+    t;
     var gameButtons = <GameButton>[
       GameButton(id: 1),
       GameButton(id: 2),
@@ -46,15 +48,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (acitvePlayer == 1) {
         gb.text = "X";
-        gb.bgc = Colors.red.shade900;
+        gb.bgc = Color(0xffe81750);
         acitvePlayer = 2;
+        t = "O";
         player1.add(gb.id);
       } else {
-        gb.text = "0";
-        gb.bgc = Colors.green;
+        gb.text = "O";
+        gb.bgc = Color(0xffffcf34);
         acitvePlayer = 1;
         player2.add(gb.id);
+        t = "X";
       }
+
       gb.enabled = false;
       checkWinner();
     });
@@ -141,58 +146,92 @@ class _HomePageState extends State<HomePage> {
     if (Navigator.canPop(context)) Navigator.pop(context);
     setState(() {
       buttonList = doINit();
+      t = "X";
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade900,
+      backgroundColor: Color(0xff392795),
       appBar: AppBar(
         title: Text("Tic Tac Toe"),
         centerTitle: true,
-        backgroundColor: Colors.black,
-        elevation: 40,
+        backgroundColor: Color(0xff392795),
+        elevation: 0,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5),
-              itemCount: buttonList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    SizedBox(
-                      height: 125,
-                      width: 125,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (buttonList[index].enabled) {
-                            playGame(buttonList[index]);
-                            print(index);
-                          } else {
-                            return null;
-                          }
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                buttonList[index].bgc)),
-                        child: Text(
-                          buttonList[index].text,
-                          style: TextStyle(fontSize: 60, color: Colors.white),
+          Text(
+            "Player's Turn $t",
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              color: Color(0xff6647c6),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 7, left: 3, right: 3),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 1),
+                  itemCount: buttonList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 110,
+                          width: 110,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (buttonList[index].enabled) {
+                                playGame(buttonList[index]);
+                                print(index);
+                              } else {
+                                return;
+                              }
+                            },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Color(0xff332268)),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)))),
+                            child: Text(
+                              buttonList[index].text,
+                              style: TextStyle(
+                                  fontSize: 100,
+                                  fontWeight: FontWeight.w900,
+                                  color: buttonList[index].bgc),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
           ),
-          ElevatedButton(onPressed: resetGame, child: Text("Restart"))
+          ElevatedButton(
+            onPressed: resetGame,
+            child: Icon(Icons.restart_alt),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
