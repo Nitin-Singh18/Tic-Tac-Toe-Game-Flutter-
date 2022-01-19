@@ -1,7 +1,7 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_collection_literals, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, prefer_collection_literals, prefer_typing_uninitialized_variables, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../button_class.dart';
 import '../customdialog.dart';
 
@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   var player1;
   var player2;
   var acitvePlayer;
-  var t = "X";
+  var turn = "X";
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     player1 = [];
     player2 = [];
     acitvePlayer = 1;
-    t;
+
     var gameButtons = <GameButton>[
       GameButton(id: 1),
       GameButton(id: 2),
@@ -48,16 +48,18 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (acitvePlayer == 1) {
         gb.text = "X";
-        gb.bgc = Color(0xffe81750);
+        // gb.bgc = Color(0xffe81750);
+        gb.bgc = Color(0xff4caf50);
+
         acitvePlayer = 2;
-        t = "O";
+        turn = "O";
         player1.add(gb.id);
       } else {
         gb.text = "O";
         gb.bgc = Color(0xffffcf34);
         acitvePlayer = 1;
         player2.add(gb.id);
-        t = "X";
+        turn = "X";
       }
 
       gb.enabled = false;
@@ -127,16 +129,14 @@ class _HomePageState extends State<HomePage> {
         showDialog(
             context: context,
             builder: (_) => CustomDialog(
-                title: "Player 1 Won",
-                content: "Press the reset button to start again",
-                callback: resetGame));
+                title: "Congrats \n Player X Won", callback: resetGame));
       } else {
         showDialog(
             context: context,
             builder: (_) => CustomDialog(
-                title: "Player 2 Won",
-                content: "Press the reset button to start again",
-                callback: resetGame));
+                  title: "Player 2 Won",
+                  callback: resetGame,
+                ));
       }
     }
     return winner;
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
     if (Navigator.canPop(context)) Navigator.pop(context);
     setState(() {
       buttonList = doINit();
-      t = "X";
+      turn = "X";
     });
   }
 
@@ -155,7 +155,80 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color(0xff392795),
       appBar: AppBar(
-        title: Text("Tic Tac Toe"),
+        title: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: "T",
+                style: GoogleFonts.cinzel(
+                  textStyle: TextStyle(
+                    color: Color(0xffffcf34),
+                    fontSize: 45,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              TextSpan(
+                text: "I",
+                style: GoogleFonts.cinzel(
+                  textStyle: TextStyle(
+                      color: Color(0xff4caf50),
+                      fontSize: 35,
+                      fontWeight: FontWeight.w900),
+                ),
+              ),
+              TextSpan(
+                  text: "C ",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xffffcf34),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: "T",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xff4caf50),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: "A",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xffffcf34),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: "C",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xff4caf50),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: " T",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xffffcf34),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: "O",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xff4caf50),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+              TextSpan(
+                  text: "E",
+                  style: GoogleFonts.cinzel(
+                      textStyle: TextStyle(
+                          color: Color(0xffffcf34),
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900))),
+            ],
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Color(0xff392795),
         elevation: 0,
@@ -164,9 +237,11 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Player's Turn $t",
+            "$turn's Turn",
             style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: turn == "X" ? Color(0xff4caf50) : Color(0xffffcf34)),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -175,46 +250,42 @@ class _HomePageState extends State<HomePage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               child: Padding(
-                padding: const EdgeInsets.only(top: 7, left: 3, right: 3),
+                padding:
+                    const EdgeInsets.only(top: 7, left: 6, right: 6, bottom: 8),
                 child: GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 1),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
                   itemCount: buttonList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 110,
-                          width: 110,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (buttonList[index].enabled) {
-                                playGame(buttonList[index]);
-                                print(index);
-                              } else {
-                                return;
-                              }
-                            },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color(0xff332268)),
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)))),
-                            child: Text(
-                              buttonList[index].text,
-                              style: TextStyle(
-                                  fontSize: 100,
-                                  fontWeight: FontWeight.w900,
-                                  color: buttonList[index].bgc),
-                            ),
-                          ),
+                    return SizedBox(
+                      height: 110,
+                      width: 110,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (buttonList[index].enabled) {
+                            playGame(buttonList[index]);
+                            print(index);
+                          } else {
+                            return;
+                          }
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xff332268)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)))),
+                        child: Text(
+                          buttonList[index].text,
+                          style: TextStyle(
+                              fontSize: 100,
+                              fontWeight: FontWeight.w900,
+                              color: buttonList[index].bgc),
                         ),
-                      ],
+                      ),
                     );
                   },
                 ),
